@@ -1,49 +1,41 @@
 package org.pstoragebox.filesystem;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.pstoragebox.tools.FileStream;
+
+import java.util.*;
 
 public class FileSystem {
 
     public FileSystem(String rootCatalog, String myId) {
         this.rootCatalog = rootCatalog;
         this.myId = myId;
-        logicalFileList = new ArrayList<>();
-    }
-
-    public void logInNet(){
-
-    }
-
-    public void logOutNet(){
-
-    }
-
-    public void joinNet(){
-
-    }
-
-    public void leaveNet(){
-
+        logicalFileList = new HashMap<>();
     }
 
     public String[] lsCommand(){
-        String[] fileName = new String[logicalFileList.size()];
-        for (int i =0;i<fileName.length;i++){
-            fileName[i] = logicalFileList.get(i).getFileName();
+        Set<String> keys=logicalFileList.keySet();
+        Iterator<String> iterator1=keys.iterator();
+        String[] fileName = new String[keys.size()];
+        int i = 0;
+        while (iterator1.hasNext()){
+            fileName[i++] = iterator1.next();
         }
         return fileName;
     }
 
-    public void uploadCommand(){
-
+    public void uploadCommand(String fileName,String filePath){
+        byte[] data = FileStream.readFileBlockFromRealSystem(filePath);
+        LogicalFile lFile = new LogicalFile(myId,rootCatalog,fileName,backupNum,data);
+        logicalFileList.put(fileName,lFile);
     }
 
-    public void downloadCommand(){
-
+    public void downloadCommand(String fileName,String filePath){
+        FileStream.writeFileBlockToRealSystem(filePath,logicalFileList.get(fileName).downloadFile());
     }
 
     private String rootCatalog;
     private String myId;
-    private List<LogicalFile> logicalFileList;
+    private Map<String,LogicalFile> logicalFileList;
+
+    private final static int backupNum = 2;
 }
