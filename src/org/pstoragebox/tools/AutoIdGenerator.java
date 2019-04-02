@@ -16,7 +16,7 @@ public class AutoIdGenerator {
             String id = UUID.randomUUID().toString().replace("-", "");
             try {
                 file.createNewFile();
-                FileWriter fileWriter=new FileWriter(file.getAbsoluteFile(),true);
+                FileWriter fileWriter=new FileWriter(file.getAbsoluteFile());
                 BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
                 bufferedWriter.write(id);
                 bufferedWriter.close();

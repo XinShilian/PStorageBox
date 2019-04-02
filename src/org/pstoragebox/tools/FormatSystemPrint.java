@@ -7,10 +7,16 @@ public class FormatSystemPrint {
         System.out.println("PStorageBox > " + message);
     }
 
+    public static void printHead(){System.out.print("PStorageBox > ");}
+
     public static String getNextLine(){
         Scanner scan = new Scanner(System.in);
+        printHead();
         String data = scan.nextLine();
-        scan.close();
+        while (data.equals("")) {
+            printHead();
+            data = scan.nextLine();
+        }
         return data;
     }
 }

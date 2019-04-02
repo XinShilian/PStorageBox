@@ -11,6 +11,7 @@ import java.util.logging.Level;
 public class PStorageBox {
     public static void run(){
         initSystem();
+        saveSystem();
     }
 
     private static void initSystem(){
@@ -39,18 +40,18 @@ public class PStorageBox {
             try {
                 FormatSystemPrint.printMessage("第一次启动系统需要配置共享文件夹路径");
                 FormatSystemPrint.printMessage("请输入共享文件夹路径：");
-                FormatSystemPrint.printMessage("");
+                FormatSystemPrint.printHead();
                 String localFilePath = FormatSystemPrint.getNextLine();
                 File dic = new File(localFilePath);
                 while (!dic.isDirectory()){
                     FormatSystemPrint.printMessage("文件夹不存在，请重新输入");
                     FormatSystemPrint.printMessage("请输入共享文件夹路径：");
-                    FormatSystemPrint.printMessage("");
+                    FormatSystemPrint.printHead();
                     localFilePath = FormatSystemPrint.getNextLine();
                     dic = new File(localFilePath);
                 }
                 file.createNewFile();
-                FileWriter fileWriter=new FileWriter(file.getAbsoluteFile(),true);
+                FileWriter fileWriter=new FileWriter(file.getAbsoluteFile());
                 BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
                 bufferedWriter.write(localFilePath);
                 bufferedWriter.close();
@@ -70,6 +71,34 @@ public class PStorageBox {
         return "LOCAL_FILE_PATH_INTI_ERROR";
     }
 
+    private static void saveSystem(){
+        try {
+            File file = new File(configFilePath);
+            if (!file.exists())
+                file.createNewFile();
+            FileWriter fileWriter=new FileWriter(file.getAbsoluteFile());
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write("SystemMessage123");
+            bufferedWriter.close();
+            fileWriter.close();
+        }catch (Exception e){
+            MyLogger.getMyLogger().log(Level.FINER,e.toString());
+        }
+    }
+
+    private static void recoverSystem(){
+        File file = new File(configFilePath);
+        if (!file.exists()){
+            MyLogger.getMyLogger().log(Level.FINER,"系统备份不存在");
+            return;
+        }
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        } catch (Exception e) {
+            MyLogger.getMyLogger().log(Level.FINER,e.toString());
+        }
+    }
 
     private static FileSystem fileSystem;
+    private static final String configFilePath = "./etc/normalConfig.txt";
 }
